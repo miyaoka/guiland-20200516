@@ -8,22 +8,33 @@
     <div class="hourHand">長針</div>
     <div class="minuteHand">短針</div>
     <div class="secondHand">秒針</div>
-    <div class="now">{{ now }}</div>
-    <p class="vals">
-      {{ hourVal.toFixed(2) }}時 {{ minVal.toFixed(2) }}分
-      {{ secVal.toFixed(2) }}秒
-    </p>
+
+    <section class="info">
+      <div class="now">{{ now }}</div>
+      <p class="vals">
+        {{ hourVal.toFixed(2) }}時 {{ minVal.toFixed(2) }}分
+        {{ secVal.toFixed(2) }}秒
+      </p>
+    </section>
+
+    <section class="control">
+      <label>
+        radius
+        <input v-model.number="radius" type="range" min="1" max="500" />
+      </label>
+    </section>
+
     <svg :height="diameter" :width="diameter">
       <circle
         :cx="radius"
         :cy="radius"
-        :r="radius"
+        :r="radius - 5"
         stroke="black"
-        stroke-width="3"
-        fill="#ccc"
+        stroke-width="2"
+        fill="#f8f8f8"
       />
       <g :transform="`translate(${radius}, ${radius})`">
-        <text
+        <!-- <text
           v-for="(num, i) in dialNumbers"
           :key="i"
           :x="getDialX(i)"
@@ -31,13 +42,14 @@
           class="small"
         >
           {{ num }}
-        </text>
+        </text> -->
         <line
           x1="0"
           y1="0"
           :x2="radius * 0.5"
           y2="0"
           stroke="black"
+          stroke-width="10"
           :style="hourStyle"
         />
         <line
@@ -46,6 +58,7 @@
           :x2="radius * 0.9"
           y2="0"
           stroke="black"
+          stroke-width="3"
           :style="minStyle"
         />
         <line
@@ -54,6 +67,7 @@
           :x2="radius * 0.8"
           y2="0"
           stroke="black"
+          stroke-width="1"
           :style="secStyle"
         />
       </g>
