@@ -8,6 +8,11 @@
     <div class="hourHand">長針</div>
     <div class="minuteHand">短針</div>
     <div class="secondHand">秒針</div>
+    <div class="now">{{ now }}</div>
+    <p class="vals">
+      {{ hourVal.toFixed(2) }}時 {{ minVal.toFixed(2) }}分
+      {{ secVal.toFixed(2) }}秒
+    </p>
     <svg :height="diameter" :width="diameter">
       <circle
         :cx="radius"
@@ -27,6 +32,30 @@
         >
           {{ num }}
         </text>
+        <line
+          x1="0"
+          y1="0"
+          :x2="radius * 0.5"
+          y2="0"
+          stroke="black"
+          :style="hourStyle"
+        />
+        <line
+          x1="0"
+          y1="0"
+          :x2="radius * 0.9"
+          y2="0"
+          stroke="black"
+          :style="minStyle"
+        />
+        <line
+          x1="0"
+          y1="0"
+          :x2="radius * 0.8"
+          y2="0"
+          stroke="black"
+          :style="secStyle"
+        />
       </g>
     </svg>
   </div>
@@ -36,18 +65,50 @@
 import Vue from 'vue'
 
 const dialToRadian = (dialIndex: number) => ((3 - dialIndex) / 6) * Math.PI
+const PI2 = Math.PI * 2
 
 export default Vue.extend({
   data() {
     return {
       radius: 200,
       dialNumbers: [...new Array(12)].map((_, i) => ((i + 11) % 12) + 1),
+      now: new Date(),
     }
   },
   computed: {
+    hourVal(): number {
+      return this.now.getHours() + this.minVal / 60
+    },
+    minVal(): number {
+      return this.now.getMinutes() + this.secVal / 60
+    },
+    secVal(): number {
+      return this.now.getSeconds() + this.now.getMilliseconds() / 1000
+    },
     diameter(): number {
       return this.radius * 2
     },
+    hourStyle(): Record<string, string> {
+      const rad = ((3 - this.hourVal) / 12) * PI2
+      return {
+        transform: `rotate(${rad * -1}rad)`,
+      }
+    },
+    minStyle(): Record<string, string> {
+      const rad = ((15 - this.minVal) / 60) * PI2
+      return {
+        transform: `rotate(${rad * -1}rad)`,
+      }
+    },
+    secStyle(): Record<string, string> {
+      const rad = ((15 - this.secVal) / 60) * PI2
+      return {
+        transform: `rotate(${rad * -1}rad)`,
+      }
+    },
+  },
+  mounted() {
+    this.update()
   },
   methods: {
     getDialX(i: number) {
@@ -55,6 +116,10 @@ export default Vue.extend({
     },
     getDialY(i: number) {
       return -Math.sin(dialToRadian(i)) * this.radius * 0.9
+    },
+    update() {
+      this.now = new Date()
+      requestAnimationFrame(this.update)
     },
   },
 })
