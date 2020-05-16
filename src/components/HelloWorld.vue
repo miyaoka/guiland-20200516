@@ -24,54 +24,57 @@
       </label>
     </section>
 
-    <svg :height="diameter" :width="diameter">
-      <circle
-        :cx="radius"
-        :cy="radius"
-        :r="radius - 5"
-        stroke="black"
-        stroke-width="2"
-        fill="#f8f8f8"
-      />
-      <g :transform="`translate(${radius}, ${radius})`">
-        <!-- <text
+    <div class="container">
+      <div v-show="radius > 70" class="textContainer">
+        <p
           v-for="(num, i) in dialNumbers"
           :key="i"
-          :x="getDialX(i)"
-          :y="getDialY(i)"
-          class="small"
+          class="dialText"
+          :style="getTextStyle(i)"
         >
           {{ num }}
-        </text> -->
-        <line
-          x1="0"
-          y1="0"
-          :x2="radius * 0.5"
-          y2="0"
+        </p>
+      </div>
+      <svg :height="diameter" :width="diameter">
+        <circle
+          :cx="radius"
+          :cy="radius"
+          :r="radius * 0.95"
           stroke="black"
-          stroke-width="10"
-          :style="hourStyle"
+          stroke-width="2"
+          fill="#f8f8f8"
         />
-        <line
-          x1="0"
-          y1="0"
-          :x2="radius * 0.9"
-          y2="0"
-          stroke="black"
-          stroke-width="3"
-          :style="minStyle"
-        />
-        <line
-          x1="0"
-          y1="0"
-          :x2="radius * 0.8"
-          y2="0"
-          stroke="black"
-          stroke-width="1"
-          :style="secStyle"
-        />
-      </g>
-    </svg>
+        <g :transform="`translate(${radius}, ${radius})`">
+          <line
+            x1="0"
+            y1="0"
+            :x2="radius * 0.5"
+            y2="0"
+            stroke="black"
+            :stroke-width="radius * 0.05"
+            :style="hourStyle"
+          />
+          <line
+            x1="0"
+            y1="0"
+            :x2="radius * 0.9"
+            y2="0"
+            stroke="black"
+            :stroke-width="radius * 0.03"
+            :style="minStyle"
+          />
+          <line
+            x1="0"
+            y1="0"
+            :x2="radius * 0.8"
+            y2="0"
+            stroke="black"
+            :stroke-width="radius * 0.01"
+            :style="secStyle"
+          />
+        </g>
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -125,6 +128,16 @@ export default Vue.extend({
     this.update()
   },
   methods: {
+    getTextStyle(i: number) {
+      const x = Math.cos(dialToRadian(i)) * this.radius * 0.85
+      const y = -Math.sin(dialToRadian(i)) * this.radius * 0.85
+      return {
+        left: `${x}px`,
+        top: `${y}px`,
+        fontSize: `${this.radius * 0.15}px`,
+        // transform: `translate(${x}px, ${y}px)`,
+      }
+    },
     getDialX(i: number) {
       return Math.cos(dialToRadian(i)) * this.radius * 0.9
     },
@@ -140,6 +153,32 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+.container {
+  border: 1px solid #f00;
+  position: relative;
+
+  .textContainer {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+
+    .dialText {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 30px;
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
 h3 {
   margin: 40px 0 0;
 }
