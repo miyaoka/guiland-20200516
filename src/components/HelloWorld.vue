@@ -1,29 +1,5 @@
 <template>
   <div>
-    <h1>#土曜GUI</h1>
-    <h2>時計widget作りたい</h2>
-
-    <div class="bezel">ベゼル（枠）</div>
-    <div class="dial">文字盤</div>
-    <div class="hourHand">長針</div>
-    <div class="minuteHand">短針</div>
-    <div class="secondHand">秒針</div>
-
-    <section class="info">
-      <div class="now">{{ now }}</div>
-      <p class="vals">
-        {{ hourVal.toFixed(2) }}時 {{ minVal.toFixed(2) }}分
-        {{ secVal.toFixed(2) }}秒
-      </p>
-    </section>
-
-    <section class="control">
-      <label>
-        radius
-        <input v-model.number="radius" type="range" min="1" max="500" />
-      </label>
-    </section>
-
     <div class="container">
       <div v-show="radius > 70" class="textContainer">
         <p
@@ -156,6 +132,8 @@ export default Vue.extend({
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 .container {
   position: relative;
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
 
   .textContainer {
     margin: auto;
